@@ -1,4 +1,4 @@
-package ro.jademy.millionaire;
+package ro.jademy.millionaire.model;
 
 public class Answer {
     private String text;

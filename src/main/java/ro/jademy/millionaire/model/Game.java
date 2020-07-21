@@ -1,4 +1,4 @@
-package ro.jademy.millionaire;
+package ro.jademy.millionaire.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
