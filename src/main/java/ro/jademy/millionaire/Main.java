@@ -1,19 +1,25 @@
 package ro.jademy.millionaire;
 
 public class Main {
+
     public static void main(String[] args) {
 
-        //1. define objects
-        //define proprieties
-        //define methods
 
-        //2. define interaction
+        // 1.  define objects
+        // define properties
+        // define methods
 
-        //1.
-        //game
-        //question
-        //answer
-         //level ???
-        //player ???
+        // 2. define interactions
+
+
+        // 1.
+        // Game
+        // Question
+        // Answer
+        // Level (???)
+        // Player (???)
+
+
+
     }
 }

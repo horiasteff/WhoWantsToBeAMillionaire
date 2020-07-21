@@ -1,8 +1,13 @@
 package ro.jademy.millionaire;
 
-public class LifeLine {
+public class Lifeline {
+
     private String name;
     private boolean used;
+
+    public Lifeline(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -19,5 +24,4 @@ public class LifeLine {
     public void setUsed(boolean used) {
         this.used = used;
     }
-
 }
