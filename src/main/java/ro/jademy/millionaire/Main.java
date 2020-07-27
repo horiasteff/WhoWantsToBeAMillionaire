@@ -25,13 +25,17 @@ public class Main {
         List<Question> difficultyThreeQuestions = getRandomQuestions(1, 3);
 
         // initialize game
+
         Game game = new Game(difficultyZeroQuestions, difficultyOneQuestions, difficultyTwoQuestions, difficultyThreeQuestions);
 
         // TODO: start the game
-        // game.start();
+          game.start();
+
+
+
     }
 
-    private static List<Question> getRandomQuestions(int nrOfQuestions, int difficulty) {
+    public static List<Question> getRandomQuestions(int nrOfQuestions, int difficulty) {
         // TODO
         // loop through all questions
         // get all questions of given difficulty

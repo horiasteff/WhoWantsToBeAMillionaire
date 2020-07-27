@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static ro.jademy.millionaire.Main.getRandomQuestions;
+
 public class Game {
 
     // 15 levels
@@ -48,5 +50,69 @@ public class Game {
         lifelines.add(new Lifeline("50-50"));
         lifelines.add(new Lifeline("50-50"));
         lifelines.add(new Lifeline("50-50"));
+    }
+
+    public void start() {
+
+        //TODO
+        //show welcome screen
+        //optionally : show rules (rounds, lifelines, etc) &commands
+
+
+        // show current level question
+        // read command from player
+        //   - if lifeline -> apply lifeline
+        //   - if end game -> end game
+        //   - read answer -> check answer
+        //              - if answer correct -> go to next level (set next level as current, etc...)
+        //              - if answer incorrect -> end game (calculate end sum, show bye bye message, play again, etc...)
+
+
+        showWelcome();
+        showRules();
+        playGame();
+
+    }
+
+    private void playGame() {
+        List<Question> questionForZero = getRandomQuestions(5, 0);
+        List<Question> questionForOne = getRandomQuestions(5, 1);
+        List<Question> questionForTwo = getRandomQuestions(4, 2);
+        List<Question> questionForThree = getRandomQuestions(1, 3);
+
+// get all the random question
+        //TODO
+        //TO SHOW THE QUESTION ONE BY ONE
+
+        for (Question question : questionForZero) {
+            System.out.println(question.getText());
+        }
+        System.out.println();
+
+        for (Question question : questionForOne) {
+            System.out.println(question.getText());
+        }
+       System.out.println();
+        for (Question question : questionForTwo) {
+            System.out.println(question.getText());
+        }
+        System.out.println();
+
+        for (Question question : questionForThree) {
+            System.out.println(question.getText());
+        }
+    }
+
+    private void showWelcome() {
+        System.out.println("Welcome to <<Who wants to be  millionaire?>>");
+        System.out.println("Wanna play?");
+    }
+
+    private void showRules() {
+        System.out.println("First, let's see what are the rules");
+        System.out.println("You have 3 chances of 50-50");
+        System.out.println("You can quit the game with the money you have at that moment");
+        System.out.println("If you pass a level, you get for sure those money even if you lose");
+
     }
 }
