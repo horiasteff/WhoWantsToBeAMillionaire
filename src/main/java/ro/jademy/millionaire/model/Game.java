@@ -1,10 +1,6 @@
 package ro.jademy.millionaire.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static ro.jademy.millionaire.Main.getRandomQuestions;
+import java.util.*;
 
 public class Game {
 
@@ -33,12 +29,12 @@ public class Game {
             new Level(15, 3, 1000000, 500000)
     );
 
-    private List<Question> difficultyZeroQuestions = new ArrayList<Question>();
-    private List<Question> difficultyOneQuestions = new ArrayList<Question>();
-    private List<Question> difficultyTwoQuestions = new ArrayList<Question>();
-    private List<Question> difficultyThreeQuestions = new ArrayList<Question>();
+    private List<Question> difficultyZeroQuestions = new ArrayList<>();
+    private List<Question> difficultyOneQuestions = new ArrayList<>();
+    private List<Question> difficultyTwoQuestions = new ArrayList<>();
+    private List<Question> difficultyThreeQuestions = new ArrayList<>();
 
-    private List<Lifeline> lifelines = new ArrayList<Lifeline>();
+    private List<Lifeline> lifelines = new ArrayList<>();
     private Level currentLevel = LEVELS.get(0);
 
     public Game(List<Question> difficultyZeroQuestions, List<Question> difficultyOneQuestions, List<Question> difficultyTwoQuestions, List<Question> difficultyThreeQuestions) {
@@ -54,65 +50,107 @@ public class Game {
 
     public void start() {
 
-        //TODO
-        //show welcome screen
-        //optionally : show rules (rounds, lifelines, etc) &commands
-
+        // TODO
+        // show welcome screen
+        // optionally: show rules (rounds, lifelines, etc) & commands
 
         // show current level question
         // read command from player
-        //   - if lifeline -> apply lifeline
-        //   - if end game -> end game
-        //   - read answer -> check answer
-        //              - if answer correct -> go to next level (set next level as current, etc...)
-        //              - if answer incorrect -> end game (calculate end sum, show bye bye message, play again, etc...)
+        //     - if lifeline -> apply lifeline
+        //     - if end game -> end game
+        //     - read answer -> check answer
+        //               - if answer correct -> go to next level (set next level as current, etc.)
+        //               - if answer incorrect -> end game (calculate end sum, show bye bye message etc.)
 
 
         showWelcome();
         showRules();
-        playGame();
 
-    }
-
-    private void playGame() {
-        List<Question> questionForZero = getRandomQuestions(5, 0);
-        List<Question> questionForOne = getRandomQuestions(5, 1);
-        List<Question> questionForTwo = getRandomQuestions(4, 2);
-        List<Question> questionForThree = getRandomQuestions(1, 3);
-
-// get all the random question
-        //TODO
-        //TO SHOW THE QUESTION ONE BY ONE
-
-        for (Question question : questionForZero) {
-            System.out.println(question.getText());
-        }
-        System.out.println();
-
-        for (Question question : questionForOne) {
-            System.out.println(question.getText());
-        }
-       System.out.println();
-        for (Question question : questionForTwo) {
-            System.out.println(question.getText());
-        }
-        System.out.println();
-
-        for (Question question : questionForThree) {
-            System.out.println(question.getText());
-        }
+        showQuestion();
     }
 
     private void showWelcome() {
-        System.out.println("Welcome to <<Who wants to be  millionaire?>>");
-        System.out.println("Wanna play?");
+        System.out.println("Welcome to Who Wants to be a Millionaire");
     }
 
     private void showRules() {
-        System.out.println("First, let's see what are the rules");
-        System.out.println("You have 3 chances of 50-50");
-        System.out.println("You can quit the game with the money you have at that moment");
-        System.out.println("If you pass a level, you get for sure those money even if you lose");
+        System.out.println("Rules: answer questions, win money!");
+    }
 
+    private void showQuestion() {
+        Question question;
+        List<Answer> allAnswers;
+
+        switch (currentLevel.getDifficultyLevel()) {
+            case 0:
+                question = difficultyZeroQuestions.get(0);
+                allAnswers = printQuestion(question);
+                System.out.println();
+                System.out.println("Applying lifeline:");
+                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
+
+                // TODO
+                // let's assume user responded with apply lifeline
+                // do all validation beforehand
+
+                break;
+            case 1:
+                question = difficultyOneQuestions.get(0);
+                allAnswers = printQuestion(question);
+                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
+                break;
+            case 2:
+                question = difficultyTwoQuestions.get(0);
+                allAnswers = printQuestion(question);
+                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
+                break;
+            case 3:
+                question = difficultyThreeQuestions.get(0);
+                allAnswers = printQuestion(question);
+                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
+                break;
+            default:
+                System.out.println("Unknown difficulty level");
+                break;
+        }
+    }
+
+    private List<Answer> printQuestion(Question question) {
+        System.out.println(question.getText());
+        System.out.println();
+
+        List<Answer> allAnswers = new ArrayList<>(question.getWrongAnswers());
+        allAnswers.add(question.getCorrectAnswer());
+        // randomize list
+        Collections.shuffle(allAnswers);
+
+        for (int i = 0; i < allAnswers.size(); i++) {
+            System.out.println(((char) (65 + i)) + ". " + allAnswers.get(i).getText());
+        }
+
+        return allAnswers;
+    }
+
+    private void applyLifeline(Lifeline lifeline, List<Answer> allAnswers, Answer correctAnswer) {
+
+        if (lifeline.getName().equals("50-50")) {
+            // print all answers except two random WRONG answers
+            Random rnd = new Random();
+            List<Answer> answerListCopy = new ArrayList<>(allAnswers);
+            answerListCopy.remove(correctAnswer);
+            answerListCopy.remove(rnd.nextInt(answerListCopy.size()));
+            answerListCopy.remove(rnd.nextInt(answerListCopy.size()));
+
+            for (int i = 0; i < allAnswers.size(); i++) {
+                Answer answer = allAnswers.get(i);
+                if (answer.equals(correctAnswer) || answerListCopy.contains(answer)) {
+                    System.out.println(((char) (65 + i)) + ". " + allAnswers.get(i).getText());
+                } else {
+                    System.out.println(((char) (65 + i)) + ". ");
+                }
+            }
+        }
+
+        lifeline.setUsed(true);
     }
 }
