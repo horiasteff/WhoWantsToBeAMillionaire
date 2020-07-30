@@ -129,12 +129,10 @@ public class QuestionProvider {
                     new Answer("two"),
                     new Answer("three")
             ), new Answer("four"),3),
-            new Question("Question 25", Arrays.asList(
-                    new Answer("one"),
-                    new Answer("two"),
-                    new Answer("three")
-            ), new Answer("four"),3)
+            new Question("In 1912, former US President Theodore Roosevelt was a candidate for which political party?", Arrays.asList(
+                    new Answer("Bull Dog"),
+                    new Answer("Bull Dog"),
+                    new Answer("Bull Elephant")
+            ), new Answer("Bull Moose"),3)
     );
-
-
 }

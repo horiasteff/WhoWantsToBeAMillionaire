@@ -3,7 +3,8 @@ package ro.jademy.millionaire.model;
 import java.util.*;
 
 public class Game {
-
+    Scanner scanner = new Scanner(System.in);
+    Random random = new Random();
     // 15 levels
     // 4 break points
     //      -> level [1, 5]    -> difficulty 0
@@ -35,6 +36,7 @@ public class Game {
     private List<Question> difficultyThreeQuestions = new ArrayList<>();
 
     private List<Lifeline> lifelines = new ArrayList<>();
+    int indexLevel = 0;
     private Level currentLevel = LEVELS.get(0);
 
     public Game(List<Question> difficultyZeroQuestions, List<Question> difficultyOneQuestions, List<Question> difficultyTwoQuestions, List<Question> difficultyThreeQuestions) {
@@ -62,19 +64,206 @@ public class Game {
         //               - if answer correct -> go to next level (set next level as current, etc.)
         //               - if answer incorrect -> end game (calculate end sum, show bye bye message etc.)
 
-
+        boolean gameContinue = false;
         showWelcome();
         showRules();
-
         showQuestion();
+
+        do {
+            currentLevel = LEVELS.get(indexLevel);
+            if (currentLevel.getDifficultyLevel() == 0) {
+                List<Answer> questionAnswers = askQuestion(difficultyZeroQuestions, currentLevel);
+                gameContinue = answerQuestion(difficultyZeroQuestions, questionAnswers);
+
+            } else if (currentLevel.getDifficultyLevel() == 1) {
+                List<Answer> questionAnswers = askQuestion(difficultyOneQuestions, currentLevel);
+                gameContinue = answerQuestion(difficultyOneQuestions, questionAnswers);
+
+            } else if (currentLevel.getDifficultyLevel() == 2) {
+                List<Answer> questionAnswers = askQuestion(difficultyTwoQuestions, currentLevel);
+                gameContinue = answerQuestion(difficultyTwoQuestions, questionAnswers);
+            } else if (currentLevel.getDifficultyLevel() == 3) {
+                List<Answer> questionAnswers = askQuestion(difficultyThreeQuestions, currentLevel);
+                gameContinue = answerQuestion(difficultyThreeQuestions, questionAnswers);
+                if (gameContinue) {
+                    System.out.println("Congrats, you've WON : " + currentLevel.getReward() + " !!");
+                    gameContinue = false;
+                    break;
+                }
+            } else {
+                System.out.println("No difficulty found for currentLevel");
+            }
+
+            if (gameContinue) {
+                indexLevel++;
+                System.out.println("Proceeding to next level: " + currentLevel.getNumber());
+            }
+        } while (gameContinue);
+    }
+
+    private List<Answer> askQuestion(List<Question> questionList, Level currentLevel) {
+        System.out.println("Prize: " + currentLevel.getReward() + ", \nCheckpoint reward: "
+                + currentLevel.getRewardBreakout() + "\n");
+        System.out.println(questionList.get(0).getText());
+
+        List<Answer> allAnswers = new ArrayList<>(questionList.get(0).getWrongAnswers());
+        allAnswers.add(random.nextInt(allAnswers.size()), questionList.get(0).getCorrectAnswer());
+        printAnswers(allAnswers);
+
+        return allAnswers;
+    }
+
+    private void printAnswers(List<Answer> answerList) {
+        String middleEmptySpace = " ";
+        int maxLength = 0;
+        for (Answer answer : answerList) {
+            if (answer.getText().length() > maxLength) {
+                maxLength = answer.getText().length();
+            }
+        }
+        for (int i = 0; i < answerList.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            System.out.printf("%-" + maxLength + "s", answerList.get(i).getText());
+            if (i % 2 == 0) {
+                System.out.print(middleEmptySpace);
+            } else {
+                System.out.println();
+            }
+        }
+    }
+
+    private boolean inputCase(int position, List<Answer> allAnswers, List<Question> questionList) {
+        boolean isCorrectAnswer;
+        if (allAnswers.get(position).getText().equals
+                (questionList.get(0).getCorrectAnswer().getText())) {
+            isCorrectAnswer = true;
+            System.out.println("\nThat was CORRECT! \n");
+            questionList.remove(0);
+        } else {
+            System.out.println("\nWRONG answer! \n");
+            System.out.println("Your checkpoint reward is: " + currentLevel.getRewardBreakout());
+            isCorrectAnswer = false;
+        }
+        return isCorrectAnswer;
+    }
+
+    private boolean inputSwitchCase(String choice, boolean helpUsed, List<Answer> allAnswers, List<Question> questionList) {
+        boolean isCorrectAnswer = false;
+        switch (choice) {
+            case "1":
+                isCorrectAnswer = inputCase(0, allAnswers, questionList);
+                break;
+            case "2":
+                isCorrectAnswer = inputCase(1, allAnswers, questionList);
+                break;
+            case "3":
+                isCorrectAnswer = inputCase(2, allAnswers, questionList);
+                break;
+            case "4":
+                isCorrectAnswer = inputCase(3, allAnswers, questionList);
+                break;
+            case "H":
+                if (!helpUsed && lifelines.size() > 0) {
+                    lifelines.remove(0);
+                    int wrongAnswerSize = questionList.get(0).getWrongAnswers().size();
+                    String wrongAnswerString = questionList.get(0).getWrongAnswers().get(random.nextInt(wrongAnswerSize)).getText();
+
+                    int indexCorrectAnswer = -1;
+                    for (int i = 0; i < allAnswers.size(); i++) {
+                        if (questionList.get(0).getCorrectAnswer().getText().equals(allAnswers.get(i).getText())) {
+                            indexCorrectAnswer = i;
+                        }
+                    }
+
+                    for (int i = 0; i < allAnswers.size(); i++) {
+                        if (!allAnswers.get(i).getText().equals(wrongAnswerString) && i != indexCorrectAnswer) {
+                            allAnswers.set(i, new Answer(""));
+                        }
+                    }
+
+                    System.out.println(questionList.get(0).getText());
+                    printAnswers(allAnswers);
+
+                    choice = validInputAnswer(true);
+                    isCorrectAnswer = inputSwitchCase(choice, true, allAnswers, questionList);
+                }
+                break;
+
+            case "Q":
+                System.out.println("Reward: " + currentLevel.getReward());
+                isCorrectAnswer = false;
+                break;
+        }
+        return isCorrectAnswer;
     }
 
     private void showWelcome() {
-        System.out.println("Welcome to Who Wants to be a Millionaire");
+        System.out.println("***********************************************");
+        System.out.println("** Welcome to Who Wants to be a Millionaire! **");
+        System.out.println("***********************************************");
+    }
+
+    private boolean answerQuestion(List<Question> questionList, List<Answer> allAnswers) {
+        boolean isCorrectAnswer;
+        String choice = validInputAnswer(false);
+        isCorrectAnswer = inputSwitchCase(choice, false, allAnswers, questionList);
+
+        return isCorrectAnswer;
+    }
+
+    private String validInputAnswer(boolean helpUsed) {
+        String input = "";
+        boolean isValid = false;
+        do {
+            if (helpUsed) {
+                System.out.println("[To answer questions, type 1, 2, 3 or 4] [L for Lifeline] [W to Walk away]");
+            } else {
+                System.out.println("[Choose an option by typing 1, 2, 3, 4 ] [L for Lifeline: "
+                        + lifelines.size() + "] [W to Walk away] ");
+            }
+
+            input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    input = "1";
+                    isValid = true;
+                    break;
+                case "2":
+                    input = "2";
+                    isValid = true;
+                    break;
+                case "3":
+                    input = "3";
+                    isValid = true;
+                    break;
+                case "4":
+                    input = "4";
+                    isValid = true;
+                    break;
+                default:
+                    if ((!input.equalsIgnoreCase("Q")) && (!input.equalsIgnoreCase("H"))) {
+                        System.out.println("Invalid input! Please, try again with the valid ones explained below.");
+                    }
+
+                    break;
+            }
+            if (input.equalsIgnoreCase("H")) {
+                if (helpUsed || lifelines.size() == 0) {
+                    System.out.println("There are no more lifelines left to use!");
+                } else {
+                    input = "H";
+                    isValid = true;
+                }
+            } else if (input.equalsIgnoreCase("Q")) {
+                input = "Q";
+                isValid = true;
+            }
+        } while (!isValid);
+        return input;
     }
 
     private void showRules() {
-        System.out.println("Rules: answer questions, win money!");
+        System.out.println("Rules: answer questions, win Money!");
     }
 
     private void showQuestion() {
