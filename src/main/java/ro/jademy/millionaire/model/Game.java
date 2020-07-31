@@ -30,10 +30,10 @@ public class Game {
             new Level(15, 3, 1000000, 500000)
     );
 
-    private List<Question> difficultyZeroQuestions = new ArrayList<>();
-    private List<Question> difficultyOneQuestions = new ArrayList<>();
-    private List<Question> difficultyTwoQuestions = new ArrayList<>();
-    private List<Question> difficultyThreeQuestions = new ArrayList<>();
+    private List<Question> difficultyZeroQuestions ;
+    private List<Question> difficultyOneQuestions ;
+    private List<Question> difficultyTwoQuestions;
+    private List<Question> difficultyThreeQuestions;
 
     private List<Lifeline> lifelines = new ArrayList<>();
     int indexLevel = 0;
@@ -67,7 +67,7 @@ public class Game {
         boolean gameContinue = false;
         showWelcome();
         showRules();
-        showQuestion();
+        //showQuestion();
 
         do {
             currentLevel = LEVELS.get(indexLevel);
@@ -96,13 +96,13 @@ public class Game {
 
             if (gameContinue) {
                 indexLevel++;
-                System.out.println("Proceeding to next level: " + currentLevel.getNumber());
+                System.out.println("Proceeding to next level: " + (currentLevel.getNumber()+1));
             }
         } while (gameContinue);
     }
 
     private List<Answer> askQuestion(List<Question> questionList, Level currentLevel) {
-        System.out.println("Prize: " + currentLevel.getReward() + ", \nCheckpoint reward: "
+        System.out.println("Prize: " + currentLevel.getReward() + " \nCheckpoint reward: "
                 + currentLevel.getRewardBreakout() + "\n");
         System.out.println(questionList.get(0).getText());
 
@@ -190,6 +190,7 @@ public class Game {
                 break;
 
             case "Q":
+                currentLevel = LEVELS.get(indexLevel-1);
                 System.out.println("Reward: " + currentLevel.getReward());
                 isCorrectAnswer = false;
                 break;
@@ -212,14 +213,14 @@ public class Game {
     }
 
     private String validInputAnswer(boolean helpUsed) {
-        String input = "";
+        String input;
         boolean isValid = false;
         do {
             if (helpUsed) {
-                System.out.println("[To answer questions, type 1, 2, 3 or 4] [L for Lifeline] [W to Walk away]");
+                System.out.println("[To answer questions, type 1, 2, 3 or 4] [H for Help Lifeline] [Q to Quit]");
             } else {
-                System.out.println("[Choose an option by typing 1, 2, 3, 4 ] [L for Lifeline: "
-                        + lifelines.size() + "] [W to Walk away] ");
+                System.out.println("[Choose an option by typing 1, 2, 3, 4 ] [H for Help Lifeline: "
+                        + lifelines.size() + "] [Q to Quit] ");
             }
 
             input = scanner.nextLine();
@@ -339,7 +340,6 @@ public class Game {
                 }
             }
         }
-
         lifeline.setUsed(true);
     }
 }
