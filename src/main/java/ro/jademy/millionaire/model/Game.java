@@ -263,41 +263,5 @@ public class Game {
         System.out.println("Rules: answer questions, win Money!");
     }
 
-    private List<Answer> printQuestion(Question question) {
-        System.out.println(question.getText());
-        System.out.println();
 
-        List<Answer> allAnswers = new ArrayList<>(question.getWrongAnswers());
-        allAnswers.add(question.getCorrectAnswer());
-        // randomize list
-        Collections.shuffle(allAnswers);
-
-        for (int i = 0; i < allAnswers.size(); i++) {
-            System.out.println(((char) (65 + i)) + ". " + allAnswers.get(i).getText());
-        }
-
-        return allAnswers;
-    }
-
-    private void applyLifeline(Lifeline lifeline, List<Answer> allAnswers, Answer correctAnswer) {
-
-        if (lifeline.getName().equals("50-50")) {
-            // print all answers except two random WRONG answers
-            Random rnd = new Random();
-            List<Answer> answerListCopy = new ArrayList<>(allAnswers);
-            answerListCopy.remove(correctAnswer);
-            answerListCopy.remove(rnd.nextInt(answerListCopy.size()));
-            answerListCopy.remove(rnd.nextInt(answerListCopy.size()));
-
-            for (int i = 0; i < allAnswers.size(); i++) {
-                Answer answer = allAnswers.get(i);
-                if (answer.equals(correctAnswer) || answerListCopy.contains(answer)) {
-                    System.out.println(((char) (65 + i)) + ". " + allAnswers.get(i).getText());
-                } else {
-                    System.out.println(((char) (65 + i)) + ". ");
-                }
-            }
-        }
-        lifeline.setUsed(true);
-    }
 }
