@@ -95,7 +95,7 @@ public class Game {
 
             if (gameContinue) {
                 indexLevel++;
-                System.out.println("Proceeding to next level: " + (currentLevel.getNumber()+1));
+                System.out.println("Proceeding to next level: " + (currentLevel.getNumber() + 1));
             }
         } while (gameContinue);
     }
@@ -187,7 +187,7 @@ public class Game {
                 break;
 
             case "Q":
-                currentLevel = LEVELS.get(indexLevel-1);
+                currentLevel = LEVELS.get(indexLevel - 1);
                 System.out.println("Reward: " + currentLevel.getReward());
                 isCorrectAnswer = false;
                 break;

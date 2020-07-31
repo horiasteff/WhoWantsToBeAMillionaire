@@ -12,15 +12,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         // 1. define objects
         // define properties
         // define methods
-
         // 2. define interactions
-
-
         // initialize questions
+
         List<Question> difficultyZeroQuestions = getRandomQuestions(5, 0);
         List<Question> difficultyOneQuestions = getRandomQuestions(5, 1);
         List<Question> difficultyTwoQuestions = getRandomQuestions(4, 2);
