@@ -30,8 +30,8 @@ public class Game {
             new Level(15, 3, 1000000, 500000)
     );
 
-    private List<Question> difficultyZeroQuestions ;
-    private List<Question> difficultyOneQuestions ;
+    private List<Question> difficultyZeroQuestions;
+    private List<Question> difficultyOneQuestions;
     private List<Question> difficultyTwoQuestions;
     private List<Question> difficultyThreeQuestions;
 
@@ -67,7 +67,6 @@ public class Game {
         boolean gameContinue = false;
         showWelcome();
         showRules();
-        //showQuestion();
 
         do {
             currentLevel = LEVELS.get(indexLevel);
@@ -174,13 +173,11 @@ public class Game {
                             indexCorrectAnswer = i;
                         }
                     }
-
                     for (int i = 0; i < allAnswers.size(); i++) {
                         if (!allAnswers.get(i).getText().equals(wrongAnswerString) && i != indexCorrectAnswer) {
                             allAnswers.set(i, new Answer(""));
                         }
                     }
-
                     System.out.println(questionList.get(0).getText());
                     printAnswers(allAnswers);
 
@@ -245,7 +242,6 @@ public class Game {
                     if ((!input.equalsIgnoreCase("Q")) && (!input.equalsIgnoreCase("H"))) {
                         System.out.println("Invalid input! Please, try again with the valid ones explained below.");
                     }
-
                     break;
             }
             if (input.equalsIgnoreCase("H")) {
@@ -265,44 +261,6 @@ public class Game {
 
     private void showRules() {
         System.out.println("Rules: answer questions, win Money!");
-    }
-
-    private void showQuestion() {
-        Question question;
-        List<Answer> allAnswers;
-
-        switch (currentLevel.getDifficultyLevel()) {
-            case 0:
-                question = difficultyZeroQuestions.get(0);
-                allAnswers = printQuestion(question);
-                System.out.println();
-                System.out.println("Applying lifeline:");
-                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
-
-                // TODO
-                // let's assume user responded with apply lifeline
-                // do all validation beforehand
-
-                break;
-            case 1:
-                question = difficultyOneQuestions.get(0);
-                allAnswers = printQuestion(question);
-                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
-                break;
-            case 2:
-                question = difficultyTwoQuestions.get(0);
-                allAnswers = printQuestion(question);
-                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
-                break;
-            case 3:
-                question = difficultyThreeQuestions.get(0);
-                allAnswers = printQuestion(question);
-                applyLifeline(lifelines.get(0), allAnswers, question.getCorrectAnswer());
-                break;
-            default:
-                System.out.println("Unknown difficulty level");
-                break;
-        }
     }
 
     private List<Answer> printQuestion(Question question) {
