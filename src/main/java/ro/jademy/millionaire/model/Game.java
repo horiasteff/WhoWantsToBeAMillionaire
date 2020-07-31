@@ -262,6 +262,4 @@ public class Game {
     private void showRules() {
         System.out.println("Rules: answer questions, win Money!");
     }
-
-
 }
